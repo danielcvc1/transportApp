@@ -1,0 +1,25 @@
+{
+  "name": "publictransportapp",
+  "version": "1.0.0",
+  "description": "App for informing citizens about the public transport in their city ",
+  "main": "app.js",
+  "scripts": {
+    "test": "nodemon app.js"
+  },
+  "author": "danielcvc1",
+  "type": "module",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "docker-compose": "^0.23.17",
+    "express": "^4.18.1",
+    "joi": "^17.6.0",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.21.0"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.7.5",
+    "nodemon": "^2.0.16"
+  }
+}
