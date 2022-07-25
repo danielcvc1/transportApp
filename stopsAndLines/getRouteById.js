@@ -3,16 +3,16 @@ import { database } from "../database.js"
 
 export const getRouteById= async (incomingData)=>{
 
-    let route = await database.Route.findOne({
+    let route = await database.Route.findByPk({
+      
         where: {
             id: incomingData.id,
         },
-        // include:[
-        //     {
-        //         model:database.StopRoute,
-               
-        //     }
-        // ],
+        include:[
+            {
+                model:database.StopRoute,
+            }
+        ],
         include:[
             {
                 model:database.Stop,
@@ -20,8 +20,10 @@ export const getRouteById= async (incomingData)=>{
 
                
             }
-        ]
+        ],
     });
+
     return route
+
 }
    

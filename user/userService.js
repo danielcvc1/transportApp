@@ -6,10 +6,15 @@ import { sendVerificationEmail } from "../email/email_service.js";
 import { passwordValidation } from "./password_service/passwordComparison.js"
 import { verifyValidation } from "./validations/verifyValidation.js"
 import { validateToken } from "../token/validateToken.js"
-import { validateActivation } from "./validations/validateMail.js";
+import { secret } from "../auth/jwt.secret.js";
+import jwt from 'jsonwebtoken'
 
 
-/////User Creation
+
+
+
+
+/////User Creation (registration)
 export const createUser = async (incomingData) => {
 
     //validation of data
@@ -113,14 +118,22 @@ export const userLogin = async (incomingData) => {
         };
     }
 
-    //jwt  odraditi
-
+    // create jwt
+    const token = jwt.sign(
+        {
+            id: user.id,
+            email: user.email,
+            isAdmin:user.isAdmin,
+            isVerified:user.isVerified
+        },
+        secret
+    )
 
     //return response
     return {
         response: "Succsess!",
-        message: `Log in succsesful! Welcome, ${user.firstName}!`,
-        // authToken: token
+        message: `Log in succsesful! Welcome,${user.firstName}!`,
+        auth:token
     };
 
 
@@ -170,79 +183,10 @@ export const verifyUser = async (incomingData) => {
 
     //verification of the user
     user.verified = new Date();
-    user.verifiedBoolean = 1;
+    user.isVerified = 1;
     user.save();
 
     return { verified: true, message: "User succsessfuly verified!", status: 201, };
 
 
 }
-
-export const activateAdmin = async (incomingData) => {
-
-    //validate incoming data
-    const validated = validateActivation.validate(incomingData, { abortEarly: false });
-    if (validated.error) {
-        return {
-            message: validated.error.details[0].message,
-            path: validated.error.details[0].path,
-        };
-    }
-    //check if sender is admin and exist in DB
-    const user = await database.User.findOne({
-        where: {
-            email: incomingData.email,
-            admin: 1,
-            verifiedBoolean: 1,
-        },
-    });
-    if (!user) {
-        return {
-            message: "User has no authorization for this action!",
-            status: 401,
-        };
-    }
-    //password comparison
-    const passIsValid = await passwordValidation(user.password, incomingData.password);
-    if (passIsValid == false) {
-        return {
-            response: "Error!",
-            message: "Passwords do not match!",
-            status: 400,
-
-        };
-    }
-    //checking the e-mail that is gonna be activated for validity
-    const newAdmin = await database.User.findOne({
-        where: {
-            email: incomingData.activateAccount,
-        },
-    });
-    if (!newAdmin) {
-        return {
-            message: "User that needs activation does not exist!",
-            status: 404,
-        };
-    }
-    if (newAdmin.dataValues.admin==1) {
-        return {
-            message: "User that needs activation is already an admin! If the account is not trusted check again for validity with the user.",
-            status: 406,
-        };
-    }
-    if (newAdmin.dataValues.verifiedBoolean==0) {
-        return {
-            message: "User that needs activation is not verified in the database!",
-            status: 406,
-        };
-    }
-    //activation of admin rights
-    newAdmin.admin = 1;
-    newAdmin.save();
-    //return response
-    return { verified: true, message: "User succsessfuly verified as admin!", status: 201, };
-
-}
-
-
-

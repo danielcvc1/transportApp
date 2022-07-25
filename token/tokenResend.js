@@ -1,7 +1,7 @@
 import { database } from "../database.js";
 import nodemailer from "nodemailer";
 import { createToken } from "./tokenCreation.js";
-
+import { verificationTemplate } from "../email/templates/verify_token_template.js";
 
 export const resendToken = async (incomingData) => {
     //check database for user
@@ -42,8 +42,8 @@ const sendEmail = async (emails, subject, data, uniqtoken) => {
         host: "smtp.mailtrap.io",
         port: 2525,
         auth: {
-            user: "9c8ed8256f3b59", ////delete when on github
-            pass: "fe0d0c7cde5ba2", ////delete when on github
+            user: "57dd07f9145653", ////delete when on github
+            pass: "c12e4656aa59fe", ////delete when on github
         },
     });
     // send mail with defined transport object

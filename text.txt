@@ -1,0 +1,117 @@
+NODE app za stajalista linije javnog prevoza:
+
+1.) ***Napraviti endpoint za logovanje korisnika (admina)
+
+    Napravljen endpoint za registraciju korisnika, logovanje, ponovno slanje tokena, user verifikacije.
+
+    endpoint za registraciju:
+    Kada se registruje korisnik, u slucaju loseg unosa podataka vraca error i http response kod.
+    U slucaju uspjesne registracije vraca podatke korisnika i salje mail za verifikaciju na dati mail.
+    Mail se sastoji od koda za verifi i linka za ponovno slanje novog koda u slucaju neuspjesne verifikacije.
+    Token se cuva u databazi i pri uspjesnoj verifikaciji brise se.
+
+    endpoint za logovanje:
+    U slucaju da korisnik nije verifikovan vraca gresku da se korisnik verifikuje i ponovo proba logovati.
+    Pri usojesnom logovanju printa poruku uspjesnog logovanja i bearer token , koji se koristi za dalji rad.
+    Token i nije toliko vazan za korisnika, ali jest za admina, zbog autorizacije koje admin ima.
+
+    endpoint za user verifikaciju:
+    U slucaju loseg tokena vraca odgovarajuci response i http response kod. Kada se user uspjesno verifikuje vraca response
+    i iskoristeni token se brise iz DB.
+
+    endpoint za token resend:
+    Koristi link koji se dobije od maila pri registraciji. Unese se u search bar i salje se novi token i brise se stari.
+
+
+
+
+    -*-*-*-*- Prvi admin se mora unijeti rucno u databazu, i onda moze davati drugima admin prava.
+
+    endpointi za davanje admin prava:
+    Potrebno unijeti email i password od vec admina i email od naloga kojem zelimo dati admin prava.
+    Potreban validan bearer token za ovu radnju.
+
+
+2.) ***(ADMIN)Mogucnost kreiranja nove stanica (stajalista) koji imaju informacije kao sto su:
+        a. Ime
+        b. Adressa
+        c. Tip (autobuska ili tramvajska)
+
+
+    Kreiranje stanice moguce samo od strane admina kada se uloguje i iskoristi svoj bearer token, posto u tokenu ima info 
+    koja govori da je dati korisnik verifikovan i da je admin.
+    Info da li korisnik ima admin privilegije i da je verifikovan je sacuvano u databazi sa true ili false.
+    U slucaju da nije admin vraca gresku "unathorized request" i status kod 401.
+    
+
+3.) ***Mogucnost izlistavanja svih dostupnih stanica
+        a. Array stanica sa njihovim informacijama
+
+    Logika koju moze koristiti obicni korisnik i admin.    
+
+
+4.) ***Mogucnost dobijanja stanice po njegovom id-u
+        a. Ime
+        b. Adressa
+        c. Tip (autobuska ili tramvajska)
+
+
+    Podatci se dobijaju sa razlicitim endpointovima i unosenjem potrebnih parametara.
+
+
+5.) ***(ADMIN)Mogucnost modifikovanja stanice
+
+
+    Data radnja se samo moze raditi ako koristnik ima admin privilegije.
+    Unos id-a stanice koje zelimo promijeniti i u body potrebne podatke.
+
+6.) ***(ADMIN)Mogucnost kreiranja linije koja ima sledece informacije:
+        a. Broj ili ime linije
+        b. Koje stanice prolaze i po kojem redoslijedu
+        c. Rasporedi polazaka u kojima pise u koliko sati je autobus ili tranvaj na toj lokaciji
+
+
+    Pravljenje nove rute ili linije prevoza.
+    Potrebne admin privilegije.
+    Potrebno unijeti ime nove rute, adresu stanice koje prolazi i vrijeme kretanja vozila sa te stanice.
+    Takodje je potrebno unijeti podatke u redoslijedu, ako vozilo polazi sa stanice a u 11:00 po tome redu 
+    treba unijeti u data polja.
+    Potrebno je da unesene stanice postoje.
+    Povezivanje rute se vrsi preko tabele StopRoute koja povezuje vise ruta na vise stanica(tabele routes i stops)
+
+
+7.) ***Mogucnost izlistavanja svih linija
+
+
+    Izlistava sve linije (bez stanica).
+    Mogu koristiti svi korisnici.
+
+
+8.) ***Mogucnost dobijanja linije ponjenom id-u
+
+
+    Mogu koristiti svi korisnici.
+    Izlistava trazenu liniju(rutu) i njene stopove.
+    Ako ne postoji taj id vraca prazan skup.
+
+
+9.) ***Mogucnost modifikovanja linije
+
+    treba admin privilegije
+    
+    endpoint changeStopInRoute: Potreban id rute u kojoj se mijenja stanica, unosi se stara stanica koja se mijenja i unosi
+    se nova stanica koja ce biti umijesto nje (njihov id) i novo vrijeme u kojem ce vozilo iz te rute biti na tom mjestu.
+
+    endpoint change destination time in route: U parametare unijeti rutu koja se mijenja i unijeti novo vrijeme i stop 
+    cije se vrijeme mijenja.
+
+
+
+
+
+
+Provjeriti relacije databaze za svaki slucaj.
+Pitati za errore da li moze hard kodovano ili bolje napraviti kao na kursu.
+Da li treba jos sta dodati.
+Citkost koda i nazivi.
+Da li dodati nove feature i koje (vremensko ogranicenje tokena, idr...)

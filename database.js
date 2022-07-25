@@ -32,12 +32,12 @@ const User = sequelize.define(
         allowNull: true,
         default: null,
     },
-    verifiedBoolean: {
+    isVerified: {
         type: DataTypes.BOOLEAN,
         allowNull: true,
         default: false,
     },
-    admin: {
+    isAdmin: {
         type: DataTypes.BOOLEAN,
         allowNull: true,
         default: false,
@@ -134,16 +134,19 @@ const StopRoute = sequelize.define(
     },
     routeId: {
         type: DataTypes.INTEGER,
+        unique:false,
         onUpdate: "Cascade",
         onDelete: "Cascade",
     },
     stopId: {
         type: DataTypes.INTEGER,
+        unique:false,
         onUpdate: "Cascade",
         onDelete: "Cascade",
     },
     timeOfDeparture:{
         type: DataTypes.TIME,
+        unique:false,
         onUpdate: "Cascade",
         onDelete: "Cascade",
 

@@ -14,6 +14,7 @@
     "docker-compose": "^0.23.17",
     "express": "^4.18.1",
     "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
     "sequelize": "^6.21.0"
   },
@@ -21,5 +22,14 @@
     "morgan": "^1.10.0",
     "nodemailer": "^6.7.5",
     "nodemon": "^2.0.16"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielcvc1/transportApp.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/danielcvc1/transportApp/issues"
+  },
+  "homepage": "https://github.com/danielcvc1/transportApp#readme"
 }

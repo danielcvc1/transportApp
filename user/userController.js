@@ -1,10 +1,8 @@
 import express from "express";
-import { database } from "../database.js";
 import { createUser } from "./userService.js"
 import { userLogin } from "./userService.js"
 import { verifyUser } from "./userService.js";
 import { resendToken } from "../token/tokenResend.js";
-import { activateAdmin } from "./userService.js";
 
 const router = express.Router();
 
@@ -14,7 +12,8 @@ router.post("/register", async (req, res) => {
 
   if (!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password) {
     return res.status(400).json({
-      message: "Error in input of data! Please check your data!"
+      message: "Error in input of data! Please check your data!",
+      status:400
     })
   }
   try {
@@ -76,26 +75,6 @@ router.post("/resendToken", async (req, res) => {
   res.send({ message: resend });
 
 })
-
-router.post("/activateAdmin", async (req, res) => {
-
-  const data = req.body
-  try {
-    const response = await activateAdmin(data);
-    if (!response) {
-      return res.status(502).json({ message: "Error at user activation! Please try again in a little while." })
-    }
-    res.status(200).json({ response: response });
-  } catch (err) {
-    console.log(err);
-  }
-
-
-})
-
-
-
-
 
 
 

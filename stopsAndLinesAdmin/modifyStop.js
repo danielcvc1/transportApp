@@ -5,11 +5,6 @@ export const modifyStop = async (id, data) => {
 
     ///add logic to check if admin is making the changges
 
-
-
-
-
-
     //validation of data
     const validated = createStopValidation.validate(data, {
         abortEarly: false,

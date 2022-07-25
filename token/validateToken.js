@@ -11,6 +11,7 @@ export const validateToken = async (userId, tokenValue, type) => {
   if (!token) {
     return  false
   }
+  
 
   // delete token
 database.userToken.destroy({

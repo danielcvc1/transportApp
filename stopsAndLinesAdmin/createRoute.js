@@ -14,15 +14,17 @@ export const createRoute = async (incomingData) => {
         return {
             message: "Error! Please check inputed data!",
             error: validated.error.details[0],
-
             status: 400
         }
     }
+
     //checking if items in the array match
     if (incomingData.stopsPassingBy.length !== incomingData.timeOfDeparture.length) {
 
         return {
-            message: "Items in stops passing by and time of departure dont match! Please fix this and try again."
+            message: "Items in stops passing by and time of departure dont match! Please fix this and try again.",
+            status: 400
+
         }
 
 
@@ -44,15 +46,13 @@ export const createRoute = async (incomingData) => {
     }
 
 
-    //renaming
-    const nameOfRoute = incomingData.nameOfRoute
     //checking if stop exist in db
 
     for (let i = 0; i < incomingData.stopsPassingBy.length; i++) {
 
         let findStop = await database.Stop.findOne({
             where: {
-                nameOfStop: incomingData.stopsPassingBy[i]
+                adress: incomingData.stopsPassingBy[i]
             },
         });
         if (!findStop)
@@ -64,35 +64,34 @@ export const createRoute = async (incomingData) => {
 
 
 
-    //creating route
+    //creating route table
 
-    ////////getting all data and sending it off
-    const stopsConnection = nameOfRoute
-    let newData = { nameOfRoute, stopsConnection }
+    const nameOfRoute=incomingData.nameOfRoute
+    let newData = { nameOfRoute }
 
     newTransportLine = await database.Route.create(newData)
 
 
-    ///creating routeStop
+    ///creating routeStop (connection between table Route and table Stop)
 
     for (let i = 0; i < incomingData.stopsPassingBy.length; i++) {
         //getting the id of the stop
 
         let findingId = await database.Stop.findOne({
             where: {
-                nameOfStop: incomingData.stopsPassingBy[i]
+                adress: incomingData.stopsPassingBy[i]
             },
         });
+
         //////
-        ////////getting all data and sending it off
         const routeId = newTransportLine.dataValues.id
         const stopId = findingId.id
         const timeOfDeparture = incomingData.timeOfDeparture[i]
 
-        const dataa = { routeId, stopId, timeOfDeparture }
+        const data = { routeId, stopId, timeOfDeparture }
 
 
-        const stopRoute = await database.StopRoute.create(dataa)
+        const stopRoute = await database.StopRoute.create(data)
 
 
 
